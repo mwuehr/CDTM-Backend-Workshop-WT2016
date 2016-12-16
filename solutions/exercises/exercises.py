@@ -26,10 +26,15 @@ def randomlist():
     return l
 
 def sort(l):
-    n = l.length()
-    for i in range(1,n):
-        for j in range(1, n-1):
-            
+    n = len(l)
+    for i in range(n, 0, -1):
+        for j in range(0, i-1):
+            if l[j] > l[j+1]:
+                x = l[j]
+                l[j] = l[j+1]
+                l[j+1] = x
+    return l
+
 
 
 class Maxi:
@@ -56,7 +61,10 @@ def main():
         print CoolerTyp.age
         CoolerTyp.beolder()
         print CoolerTyp.age
-        print randomlist()
+        l = randomlist()
+        print l
+        print sort(l)
+
 
 
 
