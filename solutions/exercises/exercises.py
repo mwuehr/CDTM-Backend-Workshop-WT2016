@@ -16,12 +16,11 @@ def countup(number):
 
 
 def listeohne50():
+    l = [i for i in range(1,101,1) if i != 50]
+    return l
+
+def randomlist():
     l = []
-    x = 1
-    while (x <= 100):
-        if x != 50:
-            l.append(x)
-        x += 1
     return l
 
 
@@ -40,15 +39,10 @@ class Maxi:
         self.age += 1
 
 
-
-
-
-
-    def main():
+def main():
         count(6)
         countup(6)
-        listeohne50()
-
+        print listeohne50()
 
 
 if __name__ == '__main__':
