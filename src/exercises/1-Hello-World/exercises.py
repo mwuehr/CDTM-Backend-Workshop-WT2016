@@ -14,8 +14,15 @@ def countup(number):
     for i in range(0,number+1):
         print helloreturn() + ": %i" %(i)
 
+
 def listeohne50():
-    while x <=
+    l = []
+    x = 1
+    while (x <= 100):
+        if x != 50:
+            l.append(x)
+        x += 1
+    return l
 
 
 class Maxi:
@@ -28,8 +35,10 @@ class Maxi:
         self.age = age
         self.studies = studies
 
+
     def getolder(self):
         self.age += 1
+
 
 
 
@@ -38,6 +47,7 @@ class Maxi:
     def main():
         count(6)
         countup(6)
+        listeohne50()
 
 
 
