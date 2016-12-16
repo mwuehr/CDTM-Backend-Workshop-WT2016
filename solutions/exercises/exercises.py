@@ -1,3 +1,5 @@
+import random
+
 def helloreturn():
     return "Hello World, Fabi sucks!"
 
@@ -20,13 +22,17 @@ def listeohne50():
     return l
 
 def randomlist():
-    l = []
+    l = [(int(random.random()*10)+1) for i in range(1,101)]
     return l
+
+def sort(l):
+    n = l.length()
+    for i in range(1,n):
+        for j in range(1, n-1):
+            
 
 
 class Maxi:
-    def f(self):
-        return "Maxi ist cool."
     looks = "amazemalls"
     intelligence ="smort"
     def __init__(self, lastname, age, studies):
@@ -35,14 +41,23 @@ class Maxi:
         self.studies = studies
 
 
-    def getolder(self):
+    def beolder(self):
         self.age += 1
 
+class Fabi(Maxi):
+    def __init__(self, lastname, age, studies):
+        Maxi.__init__(self)
 
 def main():
         count(6)
         countup(6)
         print listeohne50()
+        CoolerTyp = Maxi("Wuehr", 21, "VWL")
+        print CoolerTyp.age
+        CoolerTyp.beolder()
+        print CoolerTyp.age
+        print randomlist()
+
 
 
 if __name__ == '__main__':
