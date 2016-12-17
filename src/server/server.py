@@ -6,6 +6,7 @@ import sys
 import json
 from list import List
 from task import Task
+from utils import Error
 
 # allow special characters (e.g. üäö ...)
 reload(sys)
@@ -18,10 +19,10 @@ sys.setdefaultencoding('utf-8')
 #   - We need this, so that the front-end works properly.
 app = Flask(__name__, static_url_path='')
 
-api_version = '2.0'
+api_version = '4.0'
 
-lists = [List("CDTM Backend Workshop", id='0')]
-tasks = [Task("Fabi crushen!!!", 0, status='completed'), Task("Mit Fabi frühstücken", 0)]
+lists = [List("CDTM Backend Workshop", id='0'), List("Social Entrepreneurship Workshop", id="1")]
+tasks = [Task("Fabi crushen!!!", 0, status='completed'), Task("Mit Fabi fruehstuecken", 0), Task("Bier kaufen", 1)]
 
 lists[0].id
 
@@ -37,19 +38,23 @@ def version():
 
 @app.route('/api/lists', methods=['GET'])
 def return_lists():
-    return jsonify({'lists': lists[0].__dict__})
+    output = []
+    for x in lists:
+        output.append(x.__dict__)
+    return jsonify({'lists': output})
 
 
-@app.route('/api/lists/<int:list_id>/task')
+@app.route('/api/lists/<int:list_id>/tasks')
 def return_tasks_in_list(list_id):
     selected_tasks = []
-    output = []
     for i in tasks:
         if i.list == list_id:
-            selected_tasks.append(i)
-    for j in selected_tasks:
-        output.append(j.__dict__)
-    return jsonify({'tasks': output})
+            selected_tasks.append(i.__dict__)
+    return jsonify({'tasks': selected_tasks})
+
+@app.rout('api/create')
+def create_task():
+
 
 
 if __name__ == '__main__':
