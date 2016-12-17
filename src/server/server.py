@@ -37,16 +37,19 @@ def version():
 
 @app.route('/api/lists', methods=['GET'])
 def return_lists():
-    return json.dumps(lists)
+    return jsonify({'lists': lists[0].__dict__})
 
 
 @app.route('/api/lists/<int:list_id>/task')
 def return_tasks_in_list(list_id):
     selected_tasks = []
+    output = []
     for i in tasks:
         if i.list == list_id:
             selected_tasks.append(i)
-    return json(selected_tasks)
+    for j in selected_tasks:
+        output.append(j.__dict__)
+    return jsonify({'tasks': output})
 
 
 if __name__ == '__main__':
