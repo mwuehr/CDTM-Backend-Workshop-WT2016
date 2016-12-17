@@ -20,7 +20,7 @@ app = Flask(__name__, static_url_path='')
 @app.route('/', methods=['GET'])
 def root():
     return send_file('index.html')
-    list = List(0, "Doof", "2")
+    list = List(0, "CDTM Backend Workshop", "2")
     task = Task(0, "Fabi crushen!!!", list, TRUE, "Beeil dich!", "today", "2")
 
 
