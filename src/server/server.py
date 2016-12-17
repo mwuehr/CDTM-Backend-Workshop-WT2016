@@ -3,8 +3,8 @@
 
 from flask import Flask, send_file
 import sys
-from list import list
-from task import task
+from list import List
+from task import Task
 
 # allow special characters (e.g. üäö ...)
 reload(sys)
@@ -20,8 +20,8 @@ app = Flask(__name__, static_url_path='')
 @app.route('/', methods=['GET'])
 def root():
     return send_file('index.html')
-    List = List(0, "Doof", "2")
-    Task = Task(0, "Fabi crushen!!!", List, TRUE, "Beeil dich!", "today", "2")
+    list = List(0, "Doof", "2")
+    task = Task(0, "Fabi crushen!!!", list, TRUE, "Beeil dich!", "today", "2")
 
 
 
