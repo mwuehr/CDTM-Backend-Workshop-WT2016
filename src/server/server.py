@@ -21,8 +21,8 @@ app = Flask(__name__, static_url_path='')
 
 api_version = '4.0'
 
-lists = [List("CDTM Backend Workshop", id='0'), List("Social Entrepreneurship Workshop", id="1")]
-tasks = [Task("Fabi crushen!!!", 0, status='completed'), Task("Mit Fabi fruehstuecken", 0), Task("Bier kaufen", 1)]
+lists = [List("CDTM Backend Workshop", id='0'), List("Social Entrepreneurship Workshop", id='1')]
+tasks = [Task("Fabi crushen!!!", '0', status='completed'), Task("Mit Fabi fruehstuecken", '0'), Task("Bier kaufen", '1')]
 
 lists[0].id
 
@@ -38,22 +38,20 @@ def version():
 
 @app.route('/api/lists', methods=['GET'])
 def return_lists():
-    output = []
-    for x in lists:
-        output.append(x.__dict__)
-    return jsonify({'lists': output})
+    response = {}
+    response['lists'] = [x.__dict__ for x in lists]
+    return jsonify(response)
 
 
-@app.route('/api/lists/<int:list_id>/tasks')
+@app.route('/api/lists/<string:list_id>/tasks', methods=['GET'])
 def return_tasks_in_list(list_id):
-    selected_tasks = []
-    for i in tasks:
-        if i.list == list_id:
-            selected_tasks.append(i.__dict__)
-    return jsonify({'tasks': selected_tasks})
+    response = {}
+    response['tasks'] = [y.__dict__ for y in tasks if y.list == list_id]
+    return jsonify(response)
 
-@app.rout('api/create')
-def create_task():
+
+@app.route('/api/lists/<string:list_id>/tasks', methods=['POST'])
+def create_task(list_id):
 
 
 
