@@ -37,7 +37,7 @@ def sort(l):
 
 
 
-class Maxi:
+class Maxi():
     looks = "amazemalls"
     intelligence ="smort"
     def __init__(self, lastname, age, studies):
