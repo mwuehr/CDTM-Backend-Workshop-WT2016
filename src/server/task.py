@@ -1,8 +1,13 @@
-class Task():
-    def __init__(self, id, title, list, status, description, due, revision):
+class Task:
+    """Represents one Todo-Item"""
+    
+    NORMAL = 'normal'
+    COMPLETED = 'completed'
+
+    def __init__(self, title, list, id='', status = NORMAL, description = '', due = '', revision = 1):
         self.id = id
-        self.title = title
         self.list = list
+        self.title =  title
         self.status = status
         self.description = description
         self.due = due

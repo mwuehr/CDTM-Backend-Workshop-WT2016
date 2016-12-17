@@ -17,12 +17,31 @@ sys.setdefaultencoding('utf-8')
 #   - We need this, so that the front-end works properly.
 app = Flask(__name__, static_url_path='')
 
+api_version = '2.0'
+
+lists = [List(0, "CDTM Backend Workshop", "2")]
+tasks = [Task(0, "Fabi crushen!!!", 0, "completed", "Beeil dich!", "today", "2"), Task(1, "Mit Fabi frühstücken", 0, "normal", "Vietnamesisch", "today", "3")]
+
 @app.route('/', methods=['GET'])
 def root():
     return send_file('index.html')
-    list = List(0, "CDTM Backend Workshop", "2")
-    task = Task(0, "Fabi crushen!!!", list, TRUE, "Beeil dich!", "today", "2")
 
+
+@app.route('/api/version', methods=['GET'])
+def version():
+    return json.dumps({'version': api_version})
+
+@app.route('/api/lists', methods=['GET'])
+def return_lists():
+    return json.dumps({'lists': lists})
+
+@app.route('/api/lists/:id/task')
+def return_tasks_in_list(list_id):
+    selected_tasks = []
+    for i in tasks:
+        if i.list == list_id:
+            selected_tasks.extend(i)
+    return selected_tasks
 
 
 if __name__ == '__main__':
