@@ -15,6 +15,9 @@ sys.setdefaultencoding('utf-8')
 
 VERSION = 4.0
 
+lists = [List("CDTM Backend Workshop", id='0'), List("Social Entrepreneurship Workshop", id='1')]
+tasks = [Task("Fabi crushen!!!", '0', status='completed'), Task("Mit Fabi fruehstuecken", '0'), Task("Bier kaufen", '1')]
+
 myLists = [
     List('Inbox', id='0'),
     List('Groceries', id='1')
