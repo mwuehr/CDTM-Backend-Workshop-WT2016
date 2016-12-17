@@ -1,7 +1,11 @@
-NOTFOUND = '404'
+from flask import abort, jsonify, make_response
 
-
-class Error:
-    def __init__(self, status, text):
-        self.status = status
-        self.text = text
+def json_abort(code, text):
+    json = {
+        'result': False,
+        'error': {
+            'status': code,
+            'text': text
+        }
+    }
+    abort(make_response(jsonify(json), code))

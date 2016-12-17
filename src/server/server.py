@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # coding: utf8
 
-from flask import Flask, send_file, jsonify
+from flask import Flask, send_file, jsonify, request
 import sys
 import json
 from list import List
 from task import Task
-from utils import Error
+from utils import json_abort
 
 # allow special characters (e.g. üäö ...)
 reload(sys)
@@ -52,6 +52,17 @@ def return_tasks_in_list(list_id):
 
 @app.route('/api/lists/<string:list_id>/tasks', methods=['POST'])
 def create_task(list_id):
+    input_json = request.get_json(force=True)
+    l = True
+    if input != '':
+        for x in lists:
+            if list_id == x.id:
+                tasks.append(Task(input_json.title, list_id))
+                l = False
+    if l:
+        json_abort('404', "The list id doesn't exist")
+
+
 
 
 
