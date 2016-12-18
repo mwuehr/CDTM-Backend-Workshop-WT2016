@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # coding: utf8
 
-from flask import Flask, send_file, request, jsonify
 import sys
 
-from utils import json_abort
-from database import *
-from task import Task
-from list import List
+from flask import Flask, send_file, request, jsonify
+
+from src.server.server.list import List
+from src.server.server.task import Task
+from src.server.server.utils import json_abort
 
 # allow special characters (e.g. üäö ...)
 reload(sys)
@@ -132,6 +132,3 @@ def update_task(list_id, task_id):
         json_abort(404, 'Task not found, dummy')
     return jsonify(updated_task.__dict__)
 
-if __name__ == '__main__':
-    app.run(host='localhost', port=1337, debug=True)
-    init_db()

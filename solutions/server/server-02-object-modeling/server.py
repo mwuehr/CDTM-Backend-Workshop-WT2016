@@ -5,8 +5,8 @@ import sys
 
 from flask import Flask, send_file
 
-from src.server.list import List
-from src.server.task import Task
+from src.server.server.list import List
+from src.server.server.task import Task
 
 # allow special characters (e.g. üäö ...)
 reload(sys)
