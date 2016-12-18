@@ -5,7 +5,7 @@ from flask import Flask, send_file, request, jsonify
 import sys
 
 from utils import json_abort
-
+from database import *
 from task import Task
 from list import List
 
@@ -134,3 +134,4 @@ def update_task(list_id, task_id):
 
 if __name__ == '__main__':
     app.run(host='localhost', port=1337, debug=True)
+    init_db()
