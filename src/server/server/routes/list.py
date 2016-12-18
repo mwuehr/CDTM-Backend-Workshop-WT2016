@@ -1,12 +1,10 @@
 from flask import jsonify
 
-from src.server.server import app
-from task import myLists
+from server import app
+from server.database import *
 
 
 # MARK: List routes
 @app.route('/api/lists', methods=['GET'])
 def get_lists():
-    response = {}
-    response['lists'] = [l.__dict__ for l in myLists]
-    return jsonify(response)
+    return jsonify(db_get_lists())
