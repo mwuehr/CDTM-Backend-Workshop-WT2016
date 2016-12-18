@@ -13,7 +13,7 @@ from list import List
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-VERSION = 4.0
+VERSION = 5.0
 
 myLists = [
     List('Inbox', id='0'),
@@ -87,6 +87,50 @@ def create_task(list_id):
     # 5. return new task
     return jsonify(newTask.__dict__)
 
+
+@app.route('/api/lists/<string:list_id>/tasks/<string:task_id>', methods=['POST'])
+def delete_task(list_id, task_id):
+    if (len([l for l in myLists if l.id == list_id]) < 1):
+        json_abort(404, 'List not found')
+    tasks = [t for t in myTasks if t.id == task_id and t.list == list_id]
+    if (len(tasks) < 1):
+        json_abort(404, 'Task not found')
+    myTasks.remove(tasks[0])
+    return jsonify({'result': True})
+
+@app.route('/api/lists/<string:list_id>/tasks/<string:task_id>', methods=['PUT'])
+def update_task(list_id, task_id):
+    if (len([l for l in myLists if l.id == list_id]) < 1):
+        json_abort(404, 'List not found')
+    if (len([t for t in myTasks if t.id == task_id]) < 1):
+        json_abort(404, 'Task not found')
+    try:
+        data = request.get_json()
+    except:
+        json_abort(400, "You didn't give a json, dummy!")
+    if data ==None:
+        json_abort(400, "You did give a invalid content type, dummy!")
+
+    title = data.get('title', None)
+    status = data.get('status', None)
+    description = data.get('description', None)
+    due = data.get('due', None)
+    revision = data.get('revision', None)
+    updated_task = None
+    if title == None or status == None or description == None or revision == None:
+        json_abort(400, 'Invalid request parameters')
+    for t in myTasks:
+        if t.id == task_id and revision >= t.revision:
+            t.title = title
+            t.status = status
+            t.description = description
+            t.due = due
+            t.revision += 1
+            updated_task = t
+
+    if updated_task == None:
+        json_abort(404, 'Task not found, dummy')
+    return jsonify(updated_task.__dict__)
 
 if __name__ == '__main__':
     app.run(host='localhost', port=1337, debug=True)
