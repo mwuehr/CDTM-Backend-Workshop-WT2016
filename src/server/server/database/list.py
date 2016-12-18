@@ -25,5 +25,7 @@ def db_get_lists():
     cur.execute(query)
     lists = []
     for row in cur:
-        lists.append(dict_from_row(row).get('type'))
+        l = List.fromDict(dict_from_row(row))
+        if isinstance(l, List):
+            lists.append(l)
     return lists

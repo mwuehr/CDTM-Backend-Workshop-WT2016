@@ -1,46 +1,79 @@
 from utils import *
 
-def db_get_task_for_list(list_id):
-    query = 'SELECT DISTINCT title FROM Tasks WHERE list = ? ORDER BY created DESC'
+from server import app
+from server.models import Task
 
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(query, [list_id])
-    Tasks = []
-    for row in cur:
-        Tasks.append(dict_from_row(row).get('type'))
-    return Tasks
+from utils import *
 
-def db_get_task(task_id):
-    query = 'SELECT DISTINCT title FROM Tasks WHERE id = ? ORDER BY created DESC'
+from server import app
+from server.models import Task
 
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(query, [list_id])
-    Tasks = []
-    for row in cur:
-        Tasks.append(dict_from_row(row).get('type'))
-    return Tasks
 
-def db_create_task(title, list):
-    query = 'INSERT INTO Tasks SET (title, list, status) VALUES(?,?,?)'
+def db_get_tasks_for_list(list_id):
+    ''' Returns all tasks from the database for a given list'''
+    query = '''
+        SELECT DISTINCT title FROM Tasks WHERE list = ? ORDER BY created DESC
+    '''
+    with app.app_context():
+        cur = get_db().cursor()
+        cur.execute(query, [list_id])
+        tasks = []
+        for row in cur:
+            task = Task.fromDict(dict_from_row(row))
+            if isinstance(task, Task):
+                tasks.append(task)
+        return tasks
 
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(query, [title, list, 'normal'])
+def db_get_task(list_id, task_id):
+    ''' Queries the db for a task with the specified id'''
+    query = '''
+        SELECT DISTINCT title FROM Tasks WHERE id = ? ORDER BY created DESC
+    '''
 
-def db_update_tasks(id, title, list, status, description, due):
-    query = 'UPDATE Tasks (title, list, status, description, due, revision) VALUES (?,?,?) WHERE id = ?'
+    with app.app_context():
+        cur = get_db().cursor()
+        cur.execute(query, [task_id, list_id])
+        task = Task.fromDict(dict_from_row(cur.fetchone()))
+        return task
 
-    db = get_db()
-    cur = db.cursor()
-    cur.execute('SELECT revision FROM Tasks WHERE id = ?', [id])
-    revision = int(cur[0]) + 1
-    cur.execute(query, [title, list, status, description, due, revision])
 
-def db_delete_tasks(id):
-    query = 'DELETE FROM Tasks WHERE id = ?'
+def db_create_task(list_id, title):
+    ''' Inserts a new task and returns it '''
+    query = '''
+        INSERT INTO Tasks SET (title, list) VALUES (?,?)
+    '''
 
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(query, [id])
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(query, [title, list_id])
+        db.commit()
+
+    return db_get_task(list_id, cur.lastrowid)
+
+def db_update_task(list_id, task):
+    ''' Updates a task and returns it '''
+    query = '''
+        UPDATE Tasks (title, list, status, description, due, revision) VALUES (?,?,?) WHERE id = ?
+    '''
+
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(query, [task.title, task.list, task.status, task.description, task.due, task.revision, task.id])
+        db.commit()
+
+    return db_get_task(list_id, task.id)
+
+def db_delete_task(id):
+    ''' Deletes the task with the specified id '''
+    query = '''
+        DELETE FROM Tasks WHERE id = ?
+    '''
+
+    with app.app_context():
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(query, [id])
+        db.commit()
+

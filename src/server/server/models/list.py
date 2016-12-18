@@ -1,10 +1,11 @@
 class List:
     '''Represents one List'''
 
-    def __init__(self, title, id='', revision=1):
+    def __init__(self, title, id='', inbox=False, revision=1):
         self.id = id
-        self.title =  title
+        self.title = title
         self.revision = revision
+        self.inbox = inbox
 
     @staticmethod
     def fromDict(dict):
@@ -17,5 +18,4 @@ class List:
             )
             return l
         except Exception as e:
-            raise e
             return None

@@ -35,7 +35,7 @@ def has_json(f):
     return decorated_function
 
 
-def lists_exists(f):
+def list_exists(f):
     ''' Checks whether a list exists with id 'list_id' exists'''
     @wraps(f)
     def decorated_function(*args, **kwargs):
