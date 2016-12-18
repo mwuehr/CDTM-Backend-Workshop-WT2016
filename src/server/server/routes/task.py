@@ -43,6 +43,7 @@ def create_task(list_id):
     if title == None:
         json_abort(400, 'Invalid request parameters')
 
+    # 3. calculate the next id
     id = max([int(t.id) for t in myTasks]+[-1]) + 1
     newTask = Task(title, list_id, id=str(id), status = Task.NORMAL)
 
@@ -52,47 +53,62 @@ def create_task(list_id):
     # 5. return new task
     return jsonify(newTask.__dict__)
 
-
-@app.route('/api/lists/<string:list_id>/tasks/<string:task_id>', methods=['POST'])
-def delete_task(list_id, task_id):
+# DESTROY ROUTE
+@app.route('/api/lists/<string:list_id>/tasks/<string:task_id>', methods=['DELETE'])
+def remove_task(list_id, task_id):
+    # 1. Check whether the specified list exists
     if (len([l for l in myLists if l.id == list_id]) < 1):
         json_abort(404, 'List not found')
+
+    # 2. Check whether the specified task exists
     tasks = [t for t in myTasks if t.id == task_id and t.list == list_id]
     if (len(tasks) < 1):
         json_abort(404, 'Task not found')
+
+    # 3. finally remove the task
     myTasks.remove(tasks[0])
+
     return jsonify({'result': True})
 
+# UPDATE ROUTE
 @app.route('/api/lists/<string:list_id>/tasks/<string:task_id>', methods=['PUT'])
 def update_task(list_id, task_id):
+    # 1. Check whether the specified list exists
     if (len([l for l in myLists if l.id == list_id]) < 1):
         json_abort(404, 'List not found')
-    if (len([t for t in myTasks if t.id == task_id]) < 1):
+
+    # 2. Check whether the specified task exists
+    tasks = [t for t in myTasks if t.id == task_id and t.list == list_id]
+    if (len(tasks) < 1):
         json_abort(404, 'Task not found')
+
+    # 3. Check whether the required parameters have been sent
     try:
-        data = request.get_json()
+         data = request.get_json()
     except:
-        json_abort(400, "You didn't give a json, dummy!")
-    if data ==None:
-        json_abort(400, "You did give a invalid content type, dummy!")
+        json_abort(400, 'No JSON provided')
+
+    if data == None:
+        json_abort(400, 'Invalid Content-Type')
 
     title = data.get('title', None)
     status = data.get('status', None)
     description = data.get('description', None)
     due = data.get('due', None)
     revision = data.get('revision', None)
-    updated_task = None
-    if title == None or status == None or description == None or revision == None:
-        json_abort(400, 'Invalid request parameters')
-    for t in myTasks:
-        if t.id == task_id and revision >= t.revision:
-            t.title = title
-            t.status = status
-            t.description = description
-            t.due = due
-            t.revision += 1
-            updated_task = t
 
-    if updated_task == None:
-        json_abort(404, 'Task not found, dummy')
-    return jsonify(updated_task.__dict__)
+    if title == None or status == None or description == None or \
+    due == None or revision == None:
+        json_abort(400, 'Invalid request parameters')
+
+    if revision < tasks[0].revision:
+        json_abort(409, 'Newer version of task available')
+
+    # TODO: ignoring 'list' for now. Implement moving tasks from one list to another
+    tasks[0].title = title
+    tasks[0].status = status
+    tasks[0].description = description
+    tasks[0].due = due
+    tasks[0].revision = tasks[0].revision + 1
+
+    return jsonify(tasks[0].__dict__)

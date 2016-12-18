@@ -2,7 +2,7 @@
 
 VERSION = 8.0
 HOST    = 'localhost'
-PORT    = 1337
+PORT    = 20008
 
 # Should the database be reinitialized each time the server is restarted?
 DB_SEED = True

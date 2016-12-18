@@ -1,6 +1,6 @@
 from flask import jsonify
 
-from server import app
+from src.server.server import app
 from task import myLists
 
 
